@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<launch>
+
+	<!-- Launch du minimal bringup et des sons perso-->
+	<include file="$(find turtlebot_bringup)/launch/minimal.launch">
+	</include>
+	<include file="$(find sound_publisher)/launch/test.launch">
+	</include>
+
+	<!-- Launch facedetection -->
+	<include file="$(find facedetector)/launch/facedetector_kinect.launch">
+	</include>
+
+	<!-- Lancement des noeuds du scenario -->
+	<!--    - Orientation de la caméra -->
+	<node pkg='turtlebot_scenario' type='servo_motion' name='servo_motion' output='screen'>
+	</node>
+
+	<!--    - Lancement du scenario -->
+<!--	<node pkg='turtlebot_scenario' type='scenario'  name='turtlebot_scenario2' output='screen'>
+	</node>
+	-->
+</launch>
