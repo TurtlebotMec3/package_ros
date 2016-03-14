@@ -18,7 +18,7 @@
 	</node>
 
 	<!--    - Lancement du scenario -->
-<!--	<node pkg='turtlebot_scenario' type='scenario'  name='turtlebot_scenario2' output='screen'>
+	<node pkg='turtlebot_scenario' type='scenario'  name='turtlebot_scenario2' output='screen'>
 	</node>
-	-->
+	
 </launch>
