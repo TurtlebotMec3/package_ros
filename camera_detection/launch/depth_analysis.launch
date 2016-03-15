@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<launch>
+	<include file="$(find turtlebot_bringup)/launch/3dsensor.launch" /> 
+	
+	<!-- node to launch a depth recongitions -->
+	<node pkg="camera_detection" type="depth_analysis" name="obstacle_detection_analysis" output="screen"/>
+
+</launch>

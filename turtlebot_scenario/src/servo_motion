@@ -12,8 +12,8 @@ from turtlebot_scenario.msg import OrientationRequest
 
 def callback(data):
 	# topic 
-	pub = rospy.Publisher('camera/orientation/value', Orientation, queue_size = 1)
-	command = rospy.Publisher('mobile_base/commands/digital_output', DigitalOutput, queue_size = 1)
+	pub = rospy.Publisher('camera/orientation/value', Orientation, queue_size = 1, latch=True)
+	command = rospy.Publisher('mobile_base/commands/digital_output', DigitalOutput, queue_size = 1, latch=True)
 		
 	# variable to publish
 	digout = DigitalOutput()

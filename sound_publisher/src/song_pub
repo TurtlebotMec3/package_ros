@@ -74,7 +74,7 @@ def callback(data):
 		pub_frequency_tones.publish(partition)
 
 	elif data.song == data.Au_Clair_De_La_Lune:
-		music_score.score =[MusicalTones('do', 5, 500),
+		music_score.score=[MusicalTones('do', 5, 500),
 				MusicalTones('do', 5, 500),
 				MusicalTones('do', 5, 500),
 				MusicalTones('re', 5, 500),
@@ -87,7 +87,34 @@ def callback(data):
 				MusicalTones('do', 5, 2000)]
 		
 		pub_musical_tones.publish(music_score)
+	
+	elif data.song == data.La_Marseillaise:
+		music_score.score=[MusicalTones('sol',5, 500),
+				MusicalTones('sol',5, 500),
+				MusicalTones('la',5, 500),
+				MusicalTones('la',5, 500),
+				MusicalTones('re',6, 750),
+				MusicalTones('si',5, 250),
+				MusicalTones('sol',5, 250),
+				MusicalTones('sol',5, 250),
+				MusicalTones('si',5, 250),
+				MusicalTones('sol',5, 250),
+				MusicalTones('silence',5, 500),
+				MusicalTones('do',6, 1000),
+				MusicalTones('la',5, 250),
+				MusicalTones('fa#',5, 250),
+				MusicalTones('sol',5, 1500),
+				MusicalTones('sol',5, 250),
+				MusicalTones('la',5, 250),
+				MusicalTones('si',5, 500),
+				MusicalTones('si',5, 500),
+				MusicalTones('si',5, 500),
+				MusicalTones('do',6, 250),
+				MusicalTones('si',5, 250),
+				MusicalTones('si',5, 250),
+				MusicalTones('la',5, 1000)]
 
+		pub_musical_tones.publish(music_score)
  
 						
 

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<launch>
+	<!-- 3d sensor + face_detection -->
+	<!--<include file="$(find facedetector)/launch/facedetector_kinect.launch">
+        </include>-->
+	
+        <!-- node to launch a depth recongitions -->
+        <include file="$(find camera_detection)/launch/depth_analysis.launch">
+	</include>
+
+</launch>
+
