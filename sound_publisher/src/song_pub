@@ -117,8 +117,51 @@ def callback(data):
 		pub_musical_tones.publish(music_score)
  
 						
+	elif data.song == data.J1:
+		music_score.score=[MusicalTones('sol',4,1000),
+				MusicalTones('sol',4,1000),    
+                                MusicalTones('mi',4,1000),
+                                MusicalTones('mi',4,1000),
+                                MusicalTones('sol',4,500),
+                                MusicalTones('fa#',4,500),
+                                MusicalTones('mi',4,500),
+                                MusicalTones('si',4,500),
+                                MusicalTones('do#',4,1000),
+                                MusicalTones('do#',4,1000),
+                                MusicalTones('sol',4,1000),
+                                MusicalTones('sol',4,1000),
+                                MusicalTones('fa#',4,1000),
+                                MusicalTones('fa#',4,1000),
+                                MusicalTones('si',4,500),
+                                MusicalTones('sol',4,500),
+                                MusicalTones('fa#',4,500),
+                                MusicalTones('si',4,500),
+                                MusicalTones('do',5,1000), 
+                                MusicalTones('do',5,1000)]
+		pub_musical_tones.publish(music_score)
 
-def main():
+	elif data.song == data.J2:
+	
+                music_score.score=[MusicalTones('re#',5,1000),  
+                                MusicalTones('re',5,500),
+                                MusicalTones('re#',5,500),
+                                MusicalTones('la#',5,2000),
+                                MusicalTones('re',5,1000),
+                                MusicalTones('re#',5,500),
+                                MusicalTones('fa',5,500),
+                                MusicalTones('sol',5,2000),
+                                MusicalTones('do',5,1500),
+                                MusicalTones('do',5,500),
+                                MusicalTones('sol',5,1000),
+                                MusicalTones('fa',5,1000),
+                                MusicalTones('fa',5,1000),
+                                MusicalTones('fa#',5,1000),
+                                MusicalTones('re',5,1000)]
+		pub_musical_tones.publish(music_score)
+	
+
+	
+def  main():
 	rospy.Subscriber("sound/play_song", SongTitle, callback)
         rospy.spin()
 

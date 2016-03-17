@@ -5,6 +5,8 @@ import rospy
 import cv2
 import numpy as np
 
+import dynamic_reconfigure.client
+
 
 from std_msgs.msg import Bool
 from sensor_msgs.msg import Image
@@ -45,9 +47,9 @@ def callback(data):
        		# on coupe les bords noirs et on enleve le sol  
     		# puis on decoupe une zone a gauche, une zone a droite et une zone au centre
 		# On fait ensuite un masque pour connaitre les points < 30 cm du robot
-        	mask_left=imageCV[H/2-20:H-50,20:20+W/4,0]<0.1
-       		mask_center=imageCV[H/2-20:H-50,W/3:2*W/3,0]<0.1
-      		mask_right=imageCV[H/2-20:H-50,3*W/4-40:W-40,0]<0.1
+        	mask_left=imageCV[H/2-10:H-25,10:10+W/4,0]<0.1
+       		mask_center=imageCV[H/2-10:H-25,W/3:2*W/3,0]<0.1
+      		mask_right=imageCV[H/2-10:H-25,3*W/4-20:W-20,0]<0.1
 
 		# Then we calculate the average of the masks to know the percentage of the 
 		# the zone  < 30 cm
@@ -79,6 +81,10 @@ def callback(data):
 
 
 def main():
+	# change depth resolution to QVGA
+	client =  dynamic_reconfigure.client.Client("/camera/friver")
+	client.update_configuration({"depth_mode":8, "data_skip":0})
+
 	rospy.Subscriber("camera/depth/image_rect", Image, callback)
 	rospy.Subscriber("/camera/obstacle_detection/enable", Bool, callback_enable) 
 	rospy.spin()

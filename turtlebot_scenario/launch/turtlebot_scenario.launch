@@ -14,11 +14,11 @@
 
 	<!-- Lancement des noeuds du scenario -->
 	<!--    - Orientation de la caméra -->
-	<node pkg='turtlebot_scenario' type='servo_motion' name='servo_motion' output='screen'>
+	<node pkg='turtlebot_scenario' type='servo_motion.py' name='servo_motion' output='screen'>
 	</node>
 
 	<!--    - Lancement du scenario -->
-	<node pkg='turtlebot_scenario' type='scenario'  name='turtlebot_scenario2' output='screen'>
+	<node pkg='turtlebot_scenario' type='scenario.py'  name='turtlebot_scenario2' output='screen'>
 	</node>
 	
 </launch>

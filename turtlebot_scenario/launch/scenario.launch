@@ -2,6 +2,6 @@
 
 <launch>
 
-        <node pkg='turtlebot_scenario' type='scenario' name='scenario' output='screen' respawn='true'>
+        <node pkg='turtlebot_scenario' type='scenario.py' name='scenario' output='screen' respawn='true'>
         </node>
 </launch>
