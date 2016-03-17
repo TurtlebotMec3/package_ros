@@ -6,7 +6,6 @@
 import roslib
 import rospy
 from kobuki_msgs.msg import DigitalOutput
-#from turtlebot_scenario import OrientationRequest
 from turtlebot_scenario.msg import Orientation
 from turtlebot_scenario.msg import OrientationRequest 
 
@@ -25,15 +24,14 @@ def callback(data):
 		digout.values[0]=False
 		angle.value = angle.low
 
-		# We store the orientation of the camera to update the model
-		pub.publish(angle)
-		command.publish(digout)
 	else:
 		digout.values[0]=True
 		angle.value = angle.up
-		# We store the orientation of the camera
-		pub.publish(angle)
-		command.publish(digout)
+
+	# We store the orientation of the camera in a topic, 
+	# So it is possible to update the robot model
+	pub.publish(angle)
+	command.publish(digout)
 		
 
 
@@ -43,5 +41,5 @@ def main():
 
 #Main function
 if __name__ == '__main__':
-	rospy.init_node('servo_motion')
+	rospy.init_node('servo_motion', anonymous=True)
 	main()

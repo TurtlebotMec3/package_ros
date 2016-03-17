@@ -15,7 +15,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs genmsg)
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
- catkin_python_setup()
+# catkin_python_setup()
 
 ################################################
 ## Declare ROS messages, services and actions ##
@@ -51,20 +51,6 @@ find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs genmsg)
    MusicalTonesArray.msg
 #   Message2.msg
  )
-
-## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
-
-## Generate actions in the 'action' folder
-# add_action_files(
-#   FILES
-#   Action1.action
-#   Action2.action
-# )
 
 ## Generate added messages and services with any dependencies listed here
  generate_messages(
@@ -108,36 +94,6 @@ catkin_package(
 #  DEPENDS system_lib
 )
 
-###########
-## Build ##
-###########
-
-## Specify additional locations of header files
-## Your package locations should be listed before other locations
-# include_directories(include)
-
-## Declare a C++ library
-# add_library(sound_publisher
-#   src/${PROJECT_NAME}/sound_publisher.cpp
-# )
-
-## Add cmake target dependencies of the library
-## as an example, code may need to be generated before libraries
-## either from message generation or dynamic reconfigure
-# add_dependencies(sound_publisher ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
-## Declare a C++ executable
-# add_executable(sound_publisher_node src/sound_publisher_node.cpp)
-
-## Add cmake target dependencies of the executable
-## same as for the library above
-# add_dependencies(sound_publisher_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
-## Specify libraries to link a library or executable target against
-# target_link_libraries(sound_publisher_node
-#   ${catkin_LIBRARIES}
-# )
-
 #############
 ## Install ##
 #############
@@ -148,9 +104,9 @@ catkin_package(
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
  install(PROGRAMS
-   src/sound_pub
-   src/song_pub
-   src/musical_note_pub
+   src/sound_pub.py
+   src/song_pub.py
+   src/musical_note_pub.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

@@ -44,6 +44,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs sound_publisher ko
    FILES
    Orientation.msg
    OrientationRequest.msg
+   LedControl.msg
  )
 
 ## Generate services in the 'srv' folder
@@ -145,6 +146,7 @@ catkin_package(
 ## in contrast to setup.py, you can choose the destination
  install(PROGRAMS
    src/servo_motion.py
+   src/led_control.py
    src/scenarioi.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )

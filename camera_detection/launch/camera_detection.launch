@@ -2,12 +2,11 @@
 
 <launch>
 	<!-- 3d sensor + face_detection -->
-	<!--<include file="$(find facedetector)/launch/facedetector_kinect.launch">
-        </include>-->
+	<include file="$(find facedetector)/launch/facedetector_kinect.launch">
+        </include>
 	
         <!-- node to launch a depth recongitions -->
-        <include file="$(find camera_detection)/launch/depth_analysis.launch">
-	</include>
+        <node pkg="camera_detection" type="depth_analysis.py" name="obstacle_detection_analysis" output="screen"/>
 
 </launch>
 

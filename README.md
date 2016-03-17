@@ -4,7 +4,12 @@ This repository contain the package ros we made for our turtlebot
 sound_publisher : 
 
 	This package allowed you to play custom sound with the kobuki base
-	To use it you must launch roslaunch sound_publisher test.launch
+	To use it you must launch roslaunch sound_publisher sound_publisher.launch
+
+	/!\ Song must not be played while the robot is moving,
+	Because the custom sound aren't in the kobuki driver, 
+	We open a new serial connection if the base.
+ 	If two entity are talking at the same time, there'll have data collisions on the serial bus !!!!
 	
 	You'll find different mode :
 		- you can play a tone by giving its frequency and the duration
@@ -30,8 +35,26 @@ sound_publisher :
 		/!\ Don't forget to run catkin_make again after adding data to the msg file
 
 
+camera_detection : 
+
+	This package can be used by anyone of you having an Asus Xtion Pro Live and can be adapted to any other 3D camera with a few modifications.
+
+	This package determines with the depth camera if there is an obstacle near the robot (on the right, in front of, on the left, on the left and on the right, or nothing)
+
+	It would publish it on a topic /camera/obstacle_detection/postion
+
+	You can choose to enable or disable the video treatment when you have no use for it by publishing True or False on the following topic : 
+	/camera/obstacle_detection/enable
+
+	to launch it : roslaunch camera_detection depth_analysis.launch
+
 
 turtlebot_scenario : 
 
 	This package contains the scenario our turtlebot is playing
 	to launch it : roslaunch turtlebot_scenario turtlebot_scenario.launch 
+
+	Please be noticed that you can not use this one directly on your turtlebot, we have plug an home maid electronic card on the pin DO1, DO2 and DO3 of the kobuki base.
+	This card allowed us to generate two pwm. One to control a servo-motor to change the orientation of the camera, the other one to control some led, just to make our Turtlebot nice ;).
+
+	You can obvisouly simulate it by using an arduino =).

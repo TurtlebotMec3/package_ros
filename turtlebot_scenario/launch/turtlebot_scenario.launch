@@ -5,7 +5,7 @@
 	<!-- Launch du minimal bringup et des sons perso-->
 	<include file="$(find turtlebot_bringup)/launch/minimal.launch">
 	</include>
-	<include file="$(find sound_publisher)/launch/test.launch">
+	<include file="$(find sound_publisher)/launch/sound_publisher.launch">
 	</include>
 
 	<!-- Launch facedetection and depth analysis-->
@@ -16,6 +16,8 @@
 	<!--    - Orientation de la caméra -->
 	<node pkg='turtlebot_scenario' type='servo_motion.py' name='servo_motion' output='screen'>
 	</node>
+
+	<node pkg='turtlebot_scenario' type='led_control.py' name='led_control' output='screen'/>
 
 	<!--    - Lancement du scenario -->
 	<node pkg='turtlebot_scenario' type='scenario.py'  name='turtlebot_scenario2' output='screen'>

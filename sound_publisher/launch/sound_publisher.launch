@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<launch>
+	<!-- topic sending sound command to the base -->
+	<node pkg="sound_publisher" type="sound_pub.py" name="sound_publisher" output="screen">
+	</node>
+
+	<!-- topic to play real musical note -->
+	<node pkg="sound_publisher" type="musical_note_pub.py" name="musical_node_publisher">
+	</node>
+
+	<!-- topic to play predifined song title -->
+	<node pkg="sound_publisher" type = "song_pub.py" name="song_publisher" output="screen">
+	</node>
+
+	
+</launch>
