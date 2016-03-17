@@ -16,16 +16,16 @@ image=CvBridge()
 pub = rospy.Publisher("/camera/obstacle_detection/position", ObstacleDetection, queue_size = 0)
 activation_flag = False
 
-def callbak_enable(flag):
+def callback_enable(flag):
 	global activation_flag
-	activation_flag = flag
+	activation_flag = flag.data
 
 def callback(data):
 	global image
 	global pub
 	global activation_flag
 
-	if (activation_flag == True)
+	if (activation_flag == True):
 		position = ObstacleDetection()
 
 		# dimension of the image received

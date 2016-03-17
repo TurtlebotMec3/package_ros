@@ -119,7 +119,7 @@ def scenario():
 		flag_detection = False
 			
 		pub_enable_depth.publish(False)
-		pub_enable_facedetection(True)
+		pub_enable_facedetection.publish(True)
 		pub_servo.publish(True)
 		send_command_motor(linear = -0.2)
 		rospy.sleep(5)
@@ -130,8 +130,8 @@ def scenario():
 			rospy.sleep(2.5)
 			flag_detected = True
 		
-		pub_enable_facedetection(False)
-		pub_enable_depth(True)
+		pub_enable_facedetection.publish(False)
+		pub_enable_depth.publish(True)
 
 		signe=sign()
 		send_command_motor(angular = signe*4)
@@ -140,13 +140,19 @@ def scenario():
 			send_command_motor(angular = signe*4)
 			send_command_motor(angular = signe*4)
 		else:
-			send_command_motor(angular = -signe*2)
+			send_command_motor(angular = -signe*4)
+                        send_command_motor(angular = signe*2)
+
+
 		
 		rospy.sleep(1)
 		
 		# robot going away
 		pub_servo.publish(False)
-		send_command_motor(linear = -0.2, angular = sign() *  3)
+		signe=sign()
+		send_command_motor(linear = -0.2, angular = signe *  3)
+                send_command_motor(angular = signe*3)
+
 		bumper.bumper = STRAIGHT
 		
 	elif dir3D.position == dir3D.CENTER:
@@ -159,7 +165,7 @@ def scenario():
 		send_command_motor(angular = 2.)
 		bumper.bumper = STRAIGHT
 
-	 elif dir3D.position == dir3D.RIGHT:
+	elif dir3D.position == dir3D.RIGHT:
                 print("Camera Droite")
                 send_command_motor(angular = 2.)
                 dir3D.position = dir3D.NONE
@@ -187,7 +193,7 @@ def main():
 	rospy.Subscriber('/camera/obstacle_detection/position', ObstacleDetection, callback_depth_analysis)	
 
 	# post traitment enable
-	pub_enable_facedetection(False)
+	pub_enable_facedetection.publish(False)
 	pub_enable_depth.publish(True)	
 
 	rospy.sleep(10)
