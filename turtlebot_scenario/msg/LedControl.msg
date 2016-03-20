@@ -4,7 +4,7 @@
 # We have 4 differents mode to control the LEDS
 
 uint8 OFF		= 0
-uint8 ON		= 1
+uint8 ALIVE		= 1
 uint8 BLINK_SLOW	= 2
 uint8 BLINK_FAST	= 3
 

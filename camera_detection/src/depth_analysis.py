@@ -7,8 +7,8 @@ import numpy as np
 
 import dynamic_reconfigure.client
 
-
 from std_msgs.msg import Bool
+
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 
@@ -82,10 +82,10 @@ def callback(data):
 
 def main():
 	# change depth resolution to QVGA
-	client =  dynamic_reconfigure.client.Client("/camera/friver")
+	client =  dynamic_reconfigure.client.Client("/camera/driver")
 	client.update_configuration({"depth_mode":8, "data_skip":0})
 
-	rospy.Subscriber("camera/depth/image_rect", Image, callback)
+	rospy.Subscriber("/camera/depth/image_rect", Image, callback)
 	rospy.Subscriber("/camera/obstacle_detection/enable", Bool, callback_enable) 
 	rospy.spin()
 

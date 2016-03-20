@@ -28,8 +28,6 @@ def callback(data):
 		digout.values[0]=True
 		angle.value = angle.up
 
-	# We store the orientation of the camera in a topic, 
-	# So it is possible to update the robot model
 	pub.publish(angle)
 	command.publish(digout)
 		

@@ -14,10 +14,10 @@ from turtlebot_scenario.msg import LedControl
 
 
 def change_mode(request):
-	pub = rospy.Publisher('mobile_base/commands/digital_output', DigitalOutput, queue_size = 1, latch=True)
+	pub = rospy.Publisher('mobile_base/commands/digital_output', DigitalOutput, queue_size = 1)
 	
 	output = DigitalOutput()
-	output.mask = [False, True, True, False, False]
+	output.mask = [False, True, True, False]
 	
 	if (request.mode == request.OFF):
 		output.values[1] = False
@@ -28,7 +28,7 @@ def change_mode(request):
 	elif (request.mode == request.BLINK_FAST):
 		output.values[1] = True
 		output.values[2] = False
-	elif (request.mode == request.ON):
+	elif (request.mode == request.ALIVE):
 		output.values[1] = True
 		output.values[2] = True
 

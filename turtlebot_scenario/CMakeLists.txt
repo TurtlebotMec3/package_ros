@@ -4,7 +4,7 @@ project(turtlebot_scenario)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs sound_publisher kobuki_msgs geometry_msgs facedetector genmsg)
+find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs sound_publisher kobuki_msgs geometry_msgs facedetector genmsg sensor_msgs)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -65,6 +65,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs sound_publisher ko
  generate_messages(
    DEPENDENCIES
    sound_publisher
+   camera_detection
 #   facedetector
    std_msgs  # Or other packages containing msgs
  )
