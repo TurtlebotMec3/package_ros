@@ -17,10 +17,6 @@ def note(f, t=500):
         global a
 	global mutex
         for i in range (0, t/100):
-	#	while(mutex == True):
-	#		print('en mutex')
-	#		rospy.sleep(0.01)
-	#	print('Je publie')
         	robot.send([kobuki_serial.BuildRequestData.sound(int(1./(f*a)), 120)])
                 time.sleep(0.1)
         rospy.sleep(0.2)
@@ -36,7 +32,6 @@ def callback_note_reception(data):
 
 def main():
 	rospy.Subscriber("sound/tones", TonesArray , callback_note_reception)
-	rospy.Subscriber("sound/mutex", Bool, callback_mutex)
 	rospy.spin()
 
 #Main function

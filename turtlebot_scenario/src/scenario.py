@@ -160,7 +160,7 @@ def scenario():
 	global pub_Tones, pub_song, song
 	global pub_servo
 	global bumper
-	global flag_detection, activation_scenario
+	global flag_detection
 	global dir3D
 	global pub_enable_depth, pub_enable_facedetection
 	global pub_light_mode, light
@@ -169,112 +169,111 @@ def scenario():
 	flag_detected=False
 	signe=1
 
-	if activation_scenario:
 	
-		if bumper.bumper == bumper.LEFT:
-			print("bumper Gauche")
-			send_command_motor(angular = -2.)
-			rospy.sleep(0.5)
-			bumper.bumper = STRAIGHT
-		elif dir3D.position == dir3D.LEFT:
-			print("Camera Gauche")
-			send_command_motor(angular = -1.5)
-			rospy.sleep(0.5)
-			dir3D.position = dir3D.NONE
-		elif bumper.bumper == bumper.CENTER:
-			print("bumper Centre")
-			
-			# Recule + levage camera
-			flag_detection = False
-				
-			pub_enable_depth.publish(False)
-			pub_enable_facedetection.publish(True)
-			pub_servo.publish(True)
-			send_command_motor(linear = -0.2)
-			
-			# Wait 5 seconds to capture a face or until center buttons is pushed 3 times in 5 seconds
-			delay = 0. 
-			while (delay < 50 and flag_detection == False):
-				rospy.sleep(0.1)
-				delay = delay + 1
-
-			# People still standing and we didn't push 3 times in 5 seconds the center button
-			while(flag_detection == True and flag_hint_action == False):
-				light.mode = light.BLINK_FAST
-				pub_light_mode.publish(light)
-				flag_detection = False
-				rospy.sleep(2.5)
-				flag_detected = True
-			
-			light.mode = light.BLINK_SLOW
-			pub_light_mode.publish(light)
-			pub_servo.publish(False)
-			pub_enable_facedetection.publish(False)
-			pub_enable_depth.publish(True)
-	
-
-			# If we didn't puch the center button 3 times in 5 seconds
-			if (flag_hint_action == False):
-				signe=sign()
-				if(flag_detected == True):
-					send_command_motor(angular = signe*3.8)
-					send_command_motor(angular = signe*3.8)
-					send_command_motor(angular = signe*3.8)
-					send_command_motor(angular = signe*3.8)
-				else :
-					send_command_motor(angular = signe*3)
-					rospy.sleep(0.5)
-					send_command_motor(angular = -signe*2)
-					rospy.sleep(0.1)
-					send_command_motor(angular = - signe*2)
-					#send_command_motor(angular = -signe*3.8)
-					rospy.sleep(0.5)
-					send_command_motor(angular = signe*2.)
+	if bumper.bumper == bumper.LEFT:
+		print("bumper Gauche")
+		send_command_motor(angular = -2.)
+		rospy.sleep(0.5)
+		bumper.bumper = STRAIGHT
+	elif dir3D.position == dir3D.LEFT:
+		print("Camera Gauche")
+		send_command_motor(angular = -1.5)
+		rospy.sleep(0.5)
+		dir3D.position = dir3D.NONE
+	elif bumper.bumper == bumper.CENTER:
+		print("bumper Centre")
 		
-				rospy.sleep(1)
+		# Recule + levage camera
+		flag_detection = False
+			
+		pub_enable_depth.publish(False)
+		pub_enable_facedetection.publish(True)
+		pub_servo.publish(True)
+		send_command_motor(linear = -0.2)
 		
-				# robot going away
-				signe=sign()
-				send_command_motor(linear = -0.2, angular = signe *  3)
-       	         		send_command_motor(angular = signe*3)
-				
-				rospy.sleep(0.5)
-				bumper.bumper = STRAIGHT
-	
-		elif dir3D.position == dir3D.CENTER:
-			print("Camera centre")
-			send_command_motor(linear = -0.2, angular = sign() * 2.)
-			rospy.sleep(0.5)
-			dir3D.position = dir3D.NONE
+		# Wait 5 seconds to capture a face or until center buttons is pushed 3 times in 5 seconds
+		delay = 0. 
+		while (delay < 50 and flag_detection == False):
+			rospy.sleep(0.1)
+			delay = delay + 1
 
-		elif bumper.bumper == bumper.RIGHT :
-			print("Bumper Droit")
-			send_command_motor(angular = 2.)
-			rospy.sleep(0.5)
-			bumper.bumper = STRAIGHT
-
-		elif dir3D.position == dir3D.RIGHT:
-       	         	print("Camera Droite")
-                	send_command_motor(angular = 1.5)
-			rospy.sleep(0.5)
-                	dir3D.position = dir3D.NONE
-
-		elif dir3D.position == dir3D.FRONT:
-			print("Camera Gauche et Droite")
+		# People still standing and we didn't push 3 times in 5 seconds the center button
+		while(flag_detection == True and flag_hint_action == False):
 			light.mode = light.BLINK_FAST
 			pub_light_mode.publish(light)
+			flag_detection = False
+			rospy.sleep(2.5)
+			flag_detected = True
+		
+		light.mode = light.BLINK_SLOW
+		pub_light_mode.publish(light)
+		pub_servo.publish(False)
+		pub_enable_facedetection.publish(False)
+		pub_enable_depth.publish(True)
+
+
+		# If we didn't puch the center button 3 times in 5 seconds
+		if (flag_hint_action == False):
 			signe=sign()
-			send_command_motor(angular = 2*signe)
-			send_command_motor(angular = 2*signe)
-			send_command_motor(angular = 2*signe)
-			send_command_motor(angular = 2*signe)
-			#send_command_motor(angular = 1.7*signe)
-			dir3D.position = dir3D.NONE
+			if(flag_detected == True):
+				send_command_motor(angular = signe*3.8)
+				send_command_motor(angular = signe*3.8)
+				send_command_motor(angular = signe*3.8)
+				send_command_motor(angular = signe*3.8)
+			else :
+				send_command_motor(angular = signe*3)
+				rospy.sleep(0.5)
+				send_command_motor(angular = -signe*2)
+				rospy.sleep(0.1)
+				send_command_motor(angular = - signe*2)
+				#send_command_motor(angular = -signe*3.8)
+				rospy.sleep(0.5)
+				send_command_motor(angular = signe*2.)
+	
+			rospy.sleep(1)
+	
+			# robot going away
+			signe=sign()
+			send_command_motor(linear = -0.2, angular = signe *  3)
+               		send_command_motor(angular = signe*3)
+				
 			rospy.sleep(0.5)
-			light.mode = light.BLINK_SLOW
-			pub_light_mode.publish(light)
-		else:
-			send_command_motor(linear = 0.2)
+			bumper.bumper = STRAIGHT
+	
+	elif dir3D.position == dir3D.CENTER:
+		print("Camera centre")
+		send_command_motor(linear = -0.2, angular = sign() * 2.)
+		rospy.sleep(0.5)
+		dir3D.position = dir3D.NONE
+
+	elif bumper.bumper == bumper.RIGHT :
+		print("Bumper Droit")
+		send_command_motor(angular = 2.)
+		rospy.sleep(0.5)
+		bumper.bumper = STRAIGHT
+
+	elif dir3D.position == dir3D.RIGHT:
+      	   	print("Camera Droite")
+               	send_command_motor(angular = 1.5)
+		rospy.sleep(0.5)
+               	dir3D.position = dir3D.NONE
+
+	elif dir3D.position == dir3D.FRONT:
+		print("Camera Gauche et Droite")
+		light.mode = light.BLINK_FAST
+		pub_light_mode.publish(light)
+		signe=sign()
+		send_command_motor(angular = 2*signe)
+		send_command_motor(angular = 2*signe)
+		send_command_motor(angular = 2*signe)
+		send_command_motor(angular = 2*signe)
+		#send_command_motor(angular = 1.7*signe)
+		dir3D.position = dir3D.NONE
+		rospy.sleep(0.5)
+		light.mode = light.BLINK_SLOW
+		pub_light_mode.publish(light)
+	else:
+		send_command_motor(linear = 0.2)
 
 def hint_action():
 	global light, pub_light_mode
@@ -292,7 +291,6 @@ def hint_action():
 		
 		signe=sign()
 	
-
 		send_command_motor(angular = 3*signe)
        	        send_command_motor(angular = 3*signe)
                 send_command_motor(angular = 3*signe)
@@ -336,8 +334,6 @@ def hint_action():
                 send_command_motor(linear = 0.5, angular = 2.5)
                 send_command_motor(linear = 0.5, angular = -2.5)
                 rospy.sleep(0.5)
-
-
              	
 		send_command_motor(angular = -2*signe)
                 send_command_motor(angular = -2*signe)
@@ -349,10 +345,22 @@ def hint_action():
                 send_command_motor(angular = +2*signe)
                 rospy.sleep(0.5)
 
-
-
-
 		flag_hint_action = False
+
+
+def event():
+	global pub_song, song
+	global pub_light_mode, light
+
+	song.song=choice([song.Star_Wars, song.Indiana_Jones, song.Au_Clair_De_La_Lune, song.La_Marseillaise])
+       	pub_song.publish(song)
+	light.mode = choice([light.BLINK_SLOW, light.BLINK_FAST, light.ALIVE])
+	pub_light_mode.publish(light)
+        time.sleep(10)
+
+	light.mode = light.BLINK_SLOW
+	pub_light_mode.publish(light)
+
 
 
 def main():
@@ -360,6 +368,7 @@ def main():
 	global pub_song, song
 	global pub_enable_depth, pub_enable_facedetection
 	global pub_light_mode, light
+	global activation_scenario
 
 	
 	# topic subscribed
@@ -369,7 +378,6 @@ def main():
 	rospy.Subscriber('/mobile_base/events/button', ButtonEvent, callback_button)
 
 	# post traitment enable
-
 	rospy.sleep(5)
 	pub_enable_facedetection.publish(False)
 	pub_enable_depth.publish(True)
@@ -391,35 +399,14 @@ def main():
 	while not rospy.is_shutdown():
 		
 		#randomm direction changing
-		duree = 10 + random()*5
+		duree = 15 + random()*10
 		time_end = rospy.get_time() + duree
 		
 		while(rospy.get_time() < time_end):
-			if (mode==0):
+			if activation_scenario :
 				scenario()
-				hint_action()
-	#	bumper.bumper = choice([bumper.LEFT, bumper.RIGHT, STRAIGHT,STRAIGHT,STRAIGHT,STRAIGHT,STRAIGHT])
-			else:
-				musique=choice([1,2,3,4])
-				if (musique==1):
-					song.song=song.Star_Wars
-				elif (musique==2):
-					song.song=song.Indiana_Jones
-				elif (musique==3):
-					song.song=song.Au_Clair_De_La_Lune
-				elif (musique==4):
-					song.song=song.La_Marseillaise
-					
-				
-				pub_song.publish(song)
-				time.sleep(10)
-				mode = 0
-
-
-
-
-		mode = math.floor(random()*1.5)
-		#event()
+				hint_action()		
+	event()
 	rospy.spin() 
 
 
