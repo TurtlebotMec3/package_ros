@@ -55,7 +55,6 @@ dir3D = ObstacleDetection()
 light = LedControl()
 
 flag_detection = False
-
 activation_scenario = True
 
 
@@ -286,67 +285,39 @@ def hint_action():
 		song.song = song.Indiana_Jones
 	#	pub_song.publish(song)
 		pub_light_mode.publish(light)
-	#	time.sleep(15)
+		time.sleep(15)
 		light.mode = light.BLINK_SLOW
 		pub_light_mode.publish(light)
-		
-		signe=sign()
-	
 
-		send_command_motor(angular = 3*signe)
-       	        send_command_motor(angular = 3*signe)
-                send_command_motor(angular = 3*signe)
-                send_command_motor(angular = 3*signe)
-		send_command_motor(angular = 3*signe)
-                rospy.sleep(0.5)
+		#choregraphy
 
-                send_command_motor(linear = 0.5, angular = 3)
-		send_command_motor(linear = 0.5, angular = 3)
+		send_command_motor(angular = 2*signe)
+                send_command_motor(angular = 2*signe)
+                send_command_motor(angular = 2*signe)
+                send_command_motor(angular = 2*signe)
 		rospy.sleep(0.5)
 
-                send_command_motor(linear = 0.5, angular = -3)
-		send_command_motor(linear = 0.5, angular = -3)  
-              	rospy.sleep(0.5)
+		send_command_motor(linear = -0.2, angular = signe *  3)
+		rospy.sleep(0.5)		
+		send_command_motor(linear = -0.2, angular = signe *  3)
+		rospy.sleep(0.5)
 
-		send_command_motor(linear = -0.5, angular = 3)
-                send_command_motor(linear = -0.5, angular = 3)
+		send_command_motor(angular = 2*signe)
+                send_command_motor(angular = 2*signe)
                 rospy.sleep(0.5)
 
-		send_command_motor(linear = -0.5, angular = -3)
-                send_command_motor(linear = -0.5, angular = -3)
-                rospy.sleep(0.5)
+		send_command_motor(linear = 0,2)
+		rospy.sleep(0,5)
 
-
-		send_command_motor(angular = -3*signe)
-                send_command_motor(angular = -3*signe)
-                send_command_motor(angular = -3*signe)
-                send_command_motor(angular = -3*signe)
-        	send_command_motor(angular = -3*signe)
-                rospy.sleep(0.5)
-
-
-		send_command_motor(linear = -0.5, angular = 2.5)
-                send_command_motor(linear = -0.5, angular = -2.5)
-		send_command_motor(linear = -0.5, angular = 2.5)
-                send_command_motor(linear = -0.5, angular = -2.5)
-                rospy.sleep(0.5)
-
-		send_command_motor(linear = 0.5, angular = 2.5)
-                send_command_motor(linear = 0.5, angular = -2.5)
-                send_command_motor(linear = 0.5, angular = 2.5)
-                send_command_motor(linear = 0.5, angular = -2.5)
-                rospy.sleep(0.5)
-
-
-             	
 		send_command_motor(angular = -2*signe)
                 send_command_motor(angular = -2*signe)
                 send_command_motor(angular = -2*signe)
                 send_command_motor(angular = -2*signe)
-                send_command_motor(angular = +2*signe)
-                send_command_motor(angular = +2*signe)
-                send_command_motor(angular = +2*signe)
-                send_command_motor(angular = +2*signe)
+                rospy.sleep(0.5)
+
+		send_command_motor(linear = -0.2, angular = signe *  3)
+                rospy.sleep(0.5)
+		send_command_motor(linear = 0.2, angular = -signe *  3)
                 rospy.sleep(0.5)
 
 
@@ -375,18 +346,18 @@ def main():
 	pub_enable_depth.publish(True)
 
 	song.song = song.Star_Wars
-#	pub_song.publish(song)
+	pub_song.publish(song)
 	light.mode = light.BLINK_FAST
 	pub_light_mode.publish(light)
-	musique=0
 
-	rospy.sleep(1)
+
+	rospy.sleep(10)
 	print("let's go !")
 	bumper.bumper = 4
 	dir3D.position = dir3D.NONE
 	light.mode = light.BLINK_SLOW
 	pub_light_mode.publish(light)
-	mode=0
+
 	
 	while not rospy.is_shutdown():
 		
@@ -395,30 +366,10 @@ def main():
 		time_end = rospy.get_time() + duree
 		
 		while(rospy.get_time() < time_end):
-			if (mode==0):
-				scenario()
-				hint_action()
+			scenario()
+			hint_action()
 	#	bumper.bumper = choice([bumper.LEFT, bumper.RIGHT, STRAIGHT,STRAIGHT,STRAIGHT,STRAIGHT,STRAIGHT])
-			else:
-				musique=choice([1,2,3,4])
-				if (musique==1):
-					song.song=song.Star_Wars
-				elif (musique==2):
-					song.song=song.Indiana_Jones
-				elif (musique==3):
-					song.song=song.Au_Clair_De_La_Lune
-				elif (musique==4):
-					song.song=song.La_Marseillaise
-					
-				
-				pub_song.publish(song)
-				time.sleep(10)
-				mode = 0
 
-
-
-
-		mode = math.floor(random()*1.5)
 		#event()
 	rospy.spin() 
 

@@ -13,10 +13,17 @@ from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 
 from camera_detection.msg import ObstacleDetection
+from camera_detection.cfg import depth_analysisConfig 
+
+
 
 image=CvBridge()
 pub = rospy.Publisher("/camera/obstacle_detection/position", ObstacleDetection, queue_size = 0)
 activation_flag = False
+
+def convert_dist(data):
+	return data/50
+
 
 def callback_enable(flag):
 	global activation_flag
@@ -26,7 +33,7 @@ def callback(data):
 	global image
 	global pub
 	global activation_flag
-
+	dist_max = 3
 	if (activation_flag == True):
 		position = ObstacleDetection()
 
@@ -37,29 +44,36 @@ def callback(data):
 		# conversion of the image to the right type
 		# ie 16bit grayscale 
 		image_temp = image.imgmsg_to_cv2(data, "16UC1")
+		#image_temp = image.imgmsg_to_cv2(data, "8UC1")
+		#print(image_temp[H/2][W/2][0])
 		imageCV=np.array(image_temp, dtype=np.float32)
-	
+		
+		#print (imageCV[H/2][W/2][0])
+
+
+		imageCV=np.clip(imageCV,0,dist_max*2)
 		# Normalisation of the image
-		cv2.normalize(imageCV, imageCV, 0, 1, cv2.NORM_MINMAX)
+		#cv2.normalize(imageCV, imageCV, 0,1, cv2.NORM_MINMAX)
 	
 		# On decoupe l'image en 3 zones
         	# On garde tout ce qui est a heuteur du robot
        		# on coupe les bords noirs et on enleve le sol  
     		# puis on decoupe une zone a gauche, une zone a droite et une zone au centre
-		# On fait ensuite un masque pour connaitre les points < 30 cm du robot
-        	mask_left=imageCV[H/2-10:H-25,10:10+W/4,0]<0.1
-       		mask_center=imageCV[H/2-10:H-25,W/3:2*W/3,0]<0.1
-      		mask_right=imageCV[H/2-10:H-25,3*W/4-20:W-20,0]<0.1
+		# On fait ensuite un masque pour connaitre les points < 50 cm du robot
+		# 1 represente 50 cm environ
+        	mask_left=imageCV[H/2-10:H-25,10:10+W/4,0]<convert_dist(distance_detection)
+       		mask_center=imageCV[H/2-10:H-25,W/3:2*W/3,0]<convert_dist(distance_detection)
+      		mask_right=imageCV[H/2-10:H-25,3*W/4-20:W-20,0]<convert_dist(distance_detection)
 
 		# Then we calculate the average of the masks to know the percentage of the 
-		# the zone  < 30 cm
+		# the zone  < 50 cm
 		average_left = np.average(mask_left)
 		average_center = np.average(mask_center)
 		average_right = np.average(mask_right)
 
 	#	print(average_left, average_center, average_right)
 
-		# if 25 % of the zone is located at less than 30 cm of the robot
+		# if 25 % of the zone is located at less than 50 cm of the robot
 	
 			# No possibility -> turn back
 		if average_left > 0.25 and average_right > 0.25:

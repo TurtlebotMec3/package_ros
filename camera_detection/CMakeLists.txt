@@ -82,8 +82,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp rospy cv_bridge std_msgs genmsg s
 
 ## Generate dynamic reconfigure parameters in the 'cfg' folder
  generate_dynamic_reconfigure_options(
-#   cfg/depth_analysis_config.cfg
-#   cfg/DynReconf2.cfg
+   cfg/depth_analysis.cfg
  )
 
 #add_dependencies(depth_analysis_config ${PROJECT_NAME}_gencfg)

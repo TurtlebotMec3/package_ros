@@ -16,12 +16,12 @@ def note(f, t=500):
         global robot
         global a
 	global mutex
-        for i in range (0, t/200):
-		while(mutex == True):
-			print('en mutex')
-			rospy.sleep(0.01)
-		print('Je publie')
-                robot.send([kobuki_serial.BuildRequestData.sound(int(1./(f*a)), 120)])
+        for i in range (0, t/100):
+	#	while(mutex == True):
+	#		print('en mutex')
+	#		rospy.sleep(0.01)
+	#	print('Je publie')
+        	robot.send([kobuki_serial.BuildRequestData.sound(int(1./(f*a)), 120)])
                 time.sleep(0.1)
         rospy.sleep(0.2)
 
