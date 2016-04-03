@@ -2,8 +2,10 @@
 
 <launch>
 	<!-- 3d sensor + face_detection -->
-	<include file="$(find facedetector)/launch/facedetector_kinect.launch">
-        </include>
+	<include file="$(find turtlebot_bringup)/launch/3dsensor.launch" />
+	<include file="$(find facedetector)/launch/facedetector.launch">
+        	<arg name="image_topic" value="/camera/rgb/image_rect_color" />
+	</include>
 	
         <!-- node to launch a depth recongitions -->
         <node pkg="camera_detection" type="depth_analysis.py" name="obstacle_detection_analysis" output="screen"/>

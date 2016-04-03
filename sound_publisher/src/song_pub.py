@@ -1,15 +1,17 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
 import roslib
 import rospy
 import time
-import kobuki_serial
 from std_msgs.msg import String
-#from std_msgs.msg import Int8
 from sound_publisher.msg import Tones
 from sound_publisher.msg import TonesArray
 from sound_publisher.msg import MusicalTones
 from sound_publisher.msg import MusicalTonesArray
 from sound_publisher.msg import SongTitle
+
 
 pub_frequency_tones = rospy.Publisher('sound/tones', TonesArray, queue_size = 1)
 pub_musical_tones = rospy.Publisher('sound/musical_note', MusicalTonesArray, queue_size =1)
@@ -88,7 +90,7 @@ def callback(data):
 		
 		pub_musical_tones.publish(music_score)
 	
-	elif data.song == data.La_Marseillaise:
+	elif data.song == data.J2:
 		music_score.score=[MusicalTones('re',6, 125),
 				MusicalTones('re',6, 1325),
 				MusicalTones('re',6, 125),
@@ -147,7 +149,7 @@ def callback(data):
                                 MusicalTones('do',5,1000)]
 		pub_musical_tones.publish(music_score)
 
-	elif data.song == data.J2:
+	elif data.song == data.La_Marseillaise:
 	
                 music_score.score=[MusicalTones('re',5, 125),  
                                 MusicalTones('re',5, 325),
@@ -156,14 +158,14 @@ def callback(data):
                                 MusicalTones('sol',5, 500),
                                 MusicalTones('la',5, 500),
                                 MusicalTones('la',5, 500),
-                                MusicalTones('re',6, 750),
-                                MusicalTones('si',5, 250),
+                                #MusicalTones('re#',6, 750), # re
+                                MusicalTones('si',5, 750),#250
                                 MusicalTones('sol',5,500),
                                 MusicalTones('sol',5,125),
                                 MusicalTones('si' ,5,325),
                                 MusicalTones('sol',5,125),
                                 MusicalTones('mi',5, 500),
-                                MusicalTones('do',6, 1000),
+                                MusicalTones('si',5, 1000),
 				MusicalTones('la',5, 250),
                                 MusicalTones('fa#',5, 125),
                                 MusicalTones('sol',5, 1250)]

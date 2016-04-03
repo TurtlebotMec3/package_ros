@@ -16,6 +16,7 @@ pub = rospy.Publisher("sound/tones", TonesArray, queue_size = 1)
 # All notes need to be write in lowercase
 def conversion_musical_note_to_frequency(note, octave):
 	return {
+		#French Notation lowercase
 		'do'  : 32.703 * (octave + 1),
 		'do#' : 34.648 * (octave + 1),
 		'reb' : 34.648 * (octave + 1),
@@ -33,6 +34,63 @@ def conversion_musical_note_to_frequency(note, octave):
 		'la#' : 58.270 * (octave + 1),
 		'sib' : 58.270 * (octave + 1),
 		'si'  : 61.735 * (octave + 1),
+
+		# French Notation lower and uppercase
+		'Do'  : 32.703 * (octave + 1),
+                'Fo#' : 34.648 * (octave + 1),
+                'Reb' : 34.648 * (octave + 1),
+                'Re'  : 36.708 * (octave + 1),
+                'Re#' : 38.891 * (octave + 1),
+                'Mib' : 38.891 * (octave + 1),
+                'Mi'  : 41.203 * (octave + 1),
+                'Fa'  : 43.654 * (octave + 1),
+                'Fa#' : 46.249 * (octave + 1),
+                'Solb': 46.249 * (octave + 1),
+                'Sol' : 48.999 * (octave + 1),
+                'Sol#': 51.913 * (octave + 1),
+                'Lab' : 51.913 * (octave + 1),
+                'La'  : 55.000 * (octave + 1),
+                'La#' : 58.270 * (octave + 1),
+                'Sib' : 58.270 * (octave + 1),
+                'Si'  : 61.735 * (octave + 1),
+
+		# French notation uppercase
+		'DO'  : 32.703 * (octave + 1),
+                'DO#' : 34.648 * (octave + 1),
+                'REb' : 34.648 * (octave + 1),
+                'RE'  : 36.708 * (octave + 1),
+                'RE#' : 38.891 * (octave + 1),
+                'MIb' : 38.891 * (octave + 1),
+                'MI'  : 41.203 * (octave + 1),
+                'FA'  : 43.654 * (octave + 1),
+                'FA#' : 46.249 * (octave + 1),
+                'SOLb': 46.249 * (octave + 1),
+                'SOL' : 48.999 * (octave + 1),
+                'SOL#': 51.913 * (octave + 1),
+                'LAb' : 51.913 * (octave + 1),
+                'LA'  : 55.000 * (octave + 1),
+                'LA#' : 58.270 * (octave + 1),
+                'SIb' : 58.270 * (octave + 1),
+                'SI'  : 61.735 * (octave + 1),
+		
+		#english notation
+		'C'  : 32.703 * (octave + 1),
+                'C#' : 34.648 * (octave + 1),
+                'Db' : 34.648 * (octave + 1),
+                'D'  : 36.708 * (octave + 1),
+                'D#' : 38.891 * (octave + 1),
+                'Db' : 38.891 * (octave + 1),
+                'E'  : 41.203 * (octave + 1),
+                'F'  : 43.654 * (octave + 1),
+                'F#' : 46.249 * (octave + 1),
+                'Gb': 46.249 * (octave + 1),
+                'G' : 48.999 * (octave + 1),
+                'G#': 51.913 * (octave + 1),
+                'Ab' : 51.913 * (octave + 1),
+                'A'  : 55.000 * (octave + 1),
+                'A#' : 58.270 * (octave + 1),
+                'Bb' : 58.270 * (octave + 1),
+                'B'  : 61.735 * (octave + 1),
 		'silence' : 1. * (octave + 1),
 	}.get(note, 1.)
 

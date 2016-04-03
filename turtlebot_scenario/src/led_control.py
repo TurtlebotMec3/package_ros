@@ -17,20 +17,41 @@ def change_mode(request):
 	pub = rospy.Publisher('mobile_base/commands/digital_output', DigitalOutput, queue_size = 1)
 	
 	output = DigitalOutput()
-	output.mask = [False, True, True, False]
+	output.mask = [False, True, True, True]
 	
 	if (request.mode == request.OFF):
 		output.values[1] = False
 		output.values[2] = False
+		output.values[3] = False
 	elif (request.mode == request.BLINK_SLOW):
 		output.values[1] = False
 		output.values[2] = True
+		output.values[3] = False
 	elif (request.mode == request.BLINK_FAST):
 		output.values[1] = True
 		output.values[2] = False
+		output.values[3] = False
 	elif (request.mode == request.ALIVE):
 		output.values[1] = True
 		output.values[2] = True
+		output.values[3] = False
+        elif (request.mode == request.R_ON):
+                output.values[1] = False
+                output.values[2] = False
+                output.values[3] = True
+        elif (request.mode == request.R_SLOW):
+                output.values[1] = False
+                output.values[2] = True
+                output.values[3] = True
+        elif (request.mode == request.R_FAST):
+                output.values[1] = True
+                output.values[2] = False
+                output.values[3] = True
+        elif (request.mode == request.ROSE):
+                output.values[1] = True
+                output.values[2] = True
+                output.values[3] = True
+
 
 	pub.publish(output)
 

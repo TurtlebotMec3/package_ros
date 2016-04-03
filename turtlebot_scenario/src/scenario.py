@@ -25,6 +25,8 @@ from turtlebot_scenario.msg import OrientationRequest
 # bumper
 from kobuki_msgs.msg import BumperEvent
 from kobuki_msgs.msg import ButtonEvent
+from kobuki_msgs.msg import CliffEvent
+from kobuki_msgs.msg import WheelDropEvent
 
 # face recognition
 from facedetector.msg import Detection
@@ -55,7 +57,7 @@ dir3D = ObstacleDetection()
 light = LedControl()
 
 flag_detection = False
-
+flag_WheelDrop = False
 activation_scenario = True
 
 
@@ -116,8 +118,10 @@ def callback_button(data):
 	global activation_scenario
 	global light, pub_light_mode
 	global pub_enable_depth, pub_enable_facedetection
+	global bumper, STRAIGHT
+	global dir3D
 
-	# Button 1 change the actual light mode
+	# Button 0 change the actual light mode
 	if data.button == data.Button0 and data.state == data.RELEASED:
 		if light.mode == light.BLINK_SLOW:
 			light.mode = light.OFF
@@ -126,6 +130,14 @@ def callback_button(data):
 		elif light.mode == light.ALIVE:
 			light.mode = light.BLINK_FAST
 		elif light.mode == light.BLINK_FAST:
+			light.mode = light.R_ON
+		elif light.mode == light.R_ON:
+			light.mode = light.R_FAST
+		elif light.mode == light.R_FAST:
+			light.mode = light.R_SLOW
+		elif light.mode == light.R_SLOW:
+			light.mode = light.ROSE
+		elif light.mode == light.ROSE:
 			light.mode = light.BLINK_SLOW
 		pub_light_mode.publish(light)
 
@@ -141,7 +153,8 @@ def callback_button(data):
 			light.mode = light.BLINK_SLOW
 			pub_light_mode.publish(light)
 			pub_enable_depth.publish(True)
-
+			bumper.bumper = STRAIGHT
+			dir3D.position = STRAIGHT
 
 # Reaction to depth_analysis
 def callback_depth_analysis(data):
@@ -152,8 +165,37 @@ def callback_depth_analysis(data):
 # Reaction to a face recognition
 def callback_face(face):
 	global flag_detection
-
+	
 	flag_detection = True
+
+def callback_cliff(data):
+
+	global bumper
+	
+	if(data.state==1):
+		bumper.bumper=data.sensor
+	print(bumper.bumper)		
+
+def callback_wheelDrop(data):
+        global activation_scenario
+        global light, pub_light_mode
+        global pub_enable_depth, pub_enable_facedetection
+        global bumper, STRAIGHT
+	global flag_WheelDrop
+
+	if (data.state==1)and(flag_WheelDrop==False):
+			activation_scenario=False
+                        light.mode = light.OFF
+                        pub_light_mode.publish(light)
+                        pub_enable_depth.publish(False)
+			flag_WheelDrop=True
+        elif(data.state==0)and(flag_WheelDrop==True):
+                       # light.mode = light.BLINK_SLOW
+                       # pub_light_mode.publish(light)
+                       # pub_enable_depth.publish(True)
+                       # bumper.bumper = STRAIGHT
+			flag_WheelDrop=False
+		#	activation_scenario=True
 
 def scenario():
 	global melody, pub_melody
@@ -192,18 +234,22 @@ def scenario():
 		send_command_motor(linear = -0.2)
 		
 		# Wait 5 seconds to capture a face or until center buttons is pushed 3 times in 5 seconds
-		delay = 0. 
-		while (delay < 50 and flag_detection == False):
+		delay = 0
+		while (delay < 50 and flag_hint_action == False):
+			if flag_detection == True:
+				flag_detected = True
+				light.mode = light.BLINK_FAST
+				pub_light_mode.publish(light)
 			rospy.sleep(0.1)
 			delay = delay + 1
 
 		# People still standing and we didn't push 3 times in 5 seconds the center button
 		while(flag_detection == True and flag_hint_action == False):
-			light.mode = light.BLINK_FAST
-			pub_light_mode.publish(light)
+			delay = 0
 			flag_detection = False
-			rospy.sleep(2.5)
-			flag_detected = True
+			while (delay < 25 and flag_hint_action == False):
+				rospy.sleep(0.1)
+				delay = delay + 1
 		
 		light.mode = light.BLINK_SLOW
 		pub_light_mode.publish(light)
@@ -216,11 +262,13 @@ def scenario():
 		if (flag_hint_action == False):
 			signe=sign()
 			if(flag_detected == True):
+				print('Visage detecte')
 				send_command_motor(angular = signe*3.8)
 				send_command_motor(angular = signe*3.8)
 				send_command_motor(angular = signe*3.8)
 				send_command_motor(angular = signe*3.8)
 			else :
+				print('Pas de visage')
 				send_command_motor(angular = signe*3)
 				rospy.sleep(0.5)
 				send_command_motor(angular = -signe*2)
@@ -279,89 +327,132 @@ def hint_action():
 	global light, pub_light_mode
 	global pub_song, song
 	global flag_hint_action
+	global bumper, STRAIGHT
 
 	if flag_hint_action == True:
-		light.mode = light.BLINK_FAST
-		song.song = song.Indiana_Jones
-	#	pub_song.publish(song)
-		pub_light_mode.publish(light)
-	#	time.sleep(15)
-		light.mode = light.BLINK_SLOW
+		light.mode = light.R_FAST
 		pub_light_mode.publish(light)
 		
-		signe=sign()
+	#	signe=sign()
 	
-		send_command_motor(angular = 3*signe)
-       	        send_command_motor(angular = 3*signe)
-                send_command_motor(angular = 3*signe)
-                send_command_motor(angular = 3*signe)
-		send_command_motor(angular = 3*signe)
-                rospy.sleep(0.5)
+		send_command_motor(angular = -3)
+      	        send_command_motor(angular = -3)
+                send_command_motor(angular = -3)
+#               send_command_motor(angular = 3*signe)
+#		send_command_motor(angular = 3*signe)
+                rospy.sleep(0.5) #demi-tour
+		
+		send_command_motor(linear = 0.2)
+                send_command_motor(linear = 0.3, angular = 2)
+#		send_command_motor(linear = 0.5, angular = 2)
+		rospy.sleep(0.2) #ondulation gauche
 
-                send_command_motor(linear = 0.5, angular = 3)
-		send_command_motor(linear = 0.5, angular = 3)
+                send_command_motor(linear = 0.3, angular = -2)
+		send_command_motor(linear = 0.3, angular = -2)  
+              	rospy.sleep(0.2)#ondulation droite
+
+		send_command_motor(linear = 0.3, angular = 2)
+                send_command_motor(linear = 0.3, angular = 2)
+                rospy.sleep(0.2)#ondulation gauche
+
+		send_command_motor(linear = 0.3, angular = -2)
+		send_command_motor(linear = 0.3, angular = -2)
+		rospy.sleep(0.2)
+#		send_command_motor(linear = 0.5, angular = -2)
+#                send_command_motor(linear = 0.5, angular = -2)
+#                rospy.sleep(0.8)#ondulation droite
+
+
+		send_command_motor(linear= 0.5, angular = -1)
+		rospy.sleep(0.1)
+                send_command_motor(linear= 0.5, angular = -1)
+#		rospy.sleep(0.1)
+	 	send_command_motor(linear= 0.5, angular = -1)
+		rospy.sleep(0.1)
+		send_command_motor(linear= 0.5, angular = -1)
+#		rospy.sleep(0.1)
+		send_command_motor(linear= 0.5, angular = -1)
+		rospy.sleep(0.1)
+		send_command_motor(linear= 0.5, angular = -1)
+#		rospy.sleep(0.1)
+		send_command_motor(linear= 0.5, angular = -1)
+		rospy.sleep(0.1)
+		send_command_motor(linear= 0.5, angular = -1)
+		rospy.sleep(0.5)#demi tour droite		
+               # send_command_motor(linear= 0.5, angular = -1)
+               # send_command_motor(linear= 0.5, angular = -1)
+               # send_command_motor(linear= 0.5, angular = -1)
+               # send_command_motor(linear= 0.5, angular = -1)
+               # send_command_motor(linear= 0.5, angular = -1)
+               # send_command_motor(linear= 0.5, angular = -1)
+
+		send_command_motor(angular=-2)
+		send_command_motor(angular=-2)
+
+ 		send_command_motor(linear = 0.2)
+                send_command_motor(linear = 0.3, angular = 2)
+#               send_command_motor(linear = 0.5, angular = 2)
+                rospy.sleep(0.2) #ondulation gauche
+
+                send_command_motor(linear = 0.3, angular = -2)
+                send_command_motor(linear = 0.3, angular = -2)
+                rospy.sleep(0.2)#ondulation droite
+
+                send_command_motor(linear = 0.3, angular = 2)
+                send_command_motor(linear = 0.3, angular = 2)
+                rospy.sleep(0.2)#ondulation gauche
+
+                send_command_motor(linear = 0.3, angular = -2)
+                send_command_motor(linear = 0.3, angular = -2)
+		rospy.sleep(0.2)#ondulation droite
+
+                send_command_motor(linear = 0.3, angular = 2)
+                send_command_motor(linear = 0.3, angular = 2)
+                rospy.sleep(0.2)#ondulation gauche
+                                
+		send_command_motor(linear= 0.5, angular = 1)
+                rospy.sleep(0.1)
+                send_command_motor(linear= 0.5, angular = 1)
+#               rospy.sleep(0.1)
+                send_command_motor(linear= 0.5, angular = 1)
+                rospy.sleep(0.1)
+                send_command_motor(linear= 0.5, angular = 1)
+#               rospy.sleep(0.1)
+                send_command_motor(linear= 0.5, angular = 1)
+                rospy.sleep(0.1)
+                send_command_motor(linear= 0.5, angular = 1)
+#               rospy.sleep(0.1)
+                send_command_motor(linear= 0.5, angular = 1)
+                rospy.sleep(0.1)
+                send_command_motor(linear= 0.5, angular = 1)
+                rospy.sleep(0.5)#demi tour droite
+		
+		send_command_motor(angular=2)
+		send_command_motor(angular=2)
 		rospy.sleep(0.5)
-
-                send_command_motor(linear = 0.5, angular = -3)
-		send_command_motor(linear = 0.5, angular = -3)  
-              	rospy.sleep(0.5)
-
-		send_command_motor(linear = -0.5, angular = 3)
-                send_command_motor(linear = -0.5, angular = 3)
-                rospy.sleep(0.5)
-
-		send_command_motor(linear = -0.5, angular = -3)
-                send_command_motor(linear = -0.5, angular = -3)
-                rospy.sleep(0.5)
-
-
-		send_command_motor(angular = -3*signe)
-                send_command_motor(angular = -3*signe)
-                send_command_motor(angular = -3*signe)
-                send_command_motor(angular = -3*signe)
-        	send_command_motor(angular = -3*signe)
-                rospy.sleep(0.5)
-
-
-		send_command_motor(linear = -0.5, angular = 2.5)
-                send_command_motor(linear = -0.5, angular = -2.5)
-		send_command_motor(linear = -0.5, angular = 2.5)
-                send_command_motor(linear = -0.5, angular = -2.5)
-                rospy.sleep(0.5)
-
-		send_command_motor(linear = 0.5, angular = 2.5)
-                send_command_motor(linear = 0.5, angular = -2.5)
-                send_command_motor(linear = 0.5, angular = 2.5)
-                send_command_motor(linear = 0.5, angular = -2.5)
-                rospy.sleep(0.5)
-             	
-		send_command_motor(angular = -2*signe)
-                send_command_motor(angular = -2*signe)
-                send_command_motor(angular = -2*signe)
-                send_command_motor(angular = -2*signe)
-                send_command_motor(angular = +2*signe)
-                send_command_motor(angular = +2*signe)
-                send_command_motor(angular = +2*signe)
-                send_command_motor(angular = +2*signe)
-                rospy.sleep(0.5)
-
+		
+ 
+	
+		light.mode = light.BLINK_SLOW
+		pub_light_mode.publish(light)
+		bumper.bumper = STRAIGHT
 		flag_hint_action = False
 
 
 def event():
 	global pub_song, song
 	global pub_light_mode, light
+	
+	if choice([True, False, False, False, False, False]):
+		rospy.sleep(1) 
+		song.song=choice([song.Star_Wars, song.Indiana_Jones, song.Au_Clair_De_La_Lune, song.La_Marseillaise])
+       		pub_song.publish(song)
+		light.mode = choice([light.ROSE, light.R_FAST, light.ALIVE, light.BLINK_FAST, light.R_ON])
+		pub_light_mode.publish(light)
+        	rospy.sleep(15)
 
-	song.song=choice([song.Star_Wars, song.Indiana_Jones, song.Au_Clair_De_La_Lune, song.La_Marseillaise])
-       	pub_song.publish(song)
-	light.mode = choice([light.BLINK_SLOW, light.BLINK_FAST, light.ALIVE])
-	pub_light_mode.publish(light)
-        time.sleep(10)
-
-	light.mode = light.BLINK_SLOW
-	pub_light_mode.publish(light)
-
-
+		light.mode = light.BLINK_SLOW
+		pub_light_mode.publish(light)
 
 def main():
 	global bumper, dir3D
@@ -376,6 +467,8 @@ def main():
 	rospy.Subscriber('/facedetector/faces', Detection, callback_face)
 	rospy.Subscriber('/camera/obstacle_detection/position', ObstacleDetection, callback_depth_analysis)	
 	rospy.Subscriber('/mobile_base/events/button', ButtonEvent, callback_button)
+	rospy.Subscriber('/mobile_base/events/cliff',CliffEvent, callback_cliff)
+	rospy.Subscriber('/mobile_base/events/wheel_drop',WheelDropEvent, callback_wheelDrop)
 
 	# post traitment enable
 	rospy.sleep(5)
@@ -398,15 +491,20 @@ def main():
 	
 	while not rospy.is_shutdown():
 		
-		#randomm direction changing
-		duree = 15 + random()*10
+		#randomm event
+		duree = 20 + random()*10
 		time_end = rospy.get_time() + duree
 		
 		while(rospy.get_time() < time_end):
 			if activation_scenario :
 				scenario()
 				hint_action()		
-	event()
+		
+		# action aleatoire
+		if activation_scenario:
+			event()
+	
+	# Boucle d'attente pour couper en cas de ctrl-c
 	rospy.spin() 
 
 
